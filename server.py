@@ -69,7 +69,8 @@ def update_player_location(player):
     while True:
         msg = str(player.player_socket.recv(32768))
         if msg != "":
-            player.location = msg.strip("(").strip(")\n").split(",")
+            player.location = msg.strip("[").strip("]\n").split(",")
+            print player.location
 
 
 if __name__ == "__main__":
@@ -99,7 +100,7 @@ if __name__ == "__main__":
                     msg = str(msg + str(p.location))
 
             client.player_socket.send(msg + "\n")
-            print (msg + "\n")
+            # print (msg + "\n")
             msg = ""
         c += 1
         _sleep(0.05)
