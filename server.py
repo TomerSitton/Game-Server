@@ -85,8 +85,7 @@ if __name__ == "__main__":
                                         args=[player])
         player_requests_thread.start()
     # send data about the players in this format:
-    # "[newX1,newY1][newX2,newY2][newX3,newY3][newX4,newY4]\n"
-    c = 0
+    # "health_[newX1,newY1]_attack ~ health_[newX2,newY2]_attack ~ health_[newX3,newY3]_attack ~ health_[newX4,newY4]_attack ~ \n"
     msg = ""
     while True:
         for client in players:
@@ -100,5 +99,4 @@ if __name__ == "__main__":
                 client.player_socket.send(msg + "\n")
                 print "sent %r"%(msg + "\n")
             msg = ""
-        c += 1
         _sleep(0.05)
