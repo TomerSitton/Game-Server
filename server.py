@@ -95,7 +95,7 @@ if __name__ == "__main__":
                 else:
                     msg = msg + p.state
 
-            if msg is not "":
+            if msg is not "" and msg.count('[') == len(players):
                 client.player_socket.send(msg + "\n")
                 print "sent %r"%(msg + "\n")
             msg = ""
