@@ -9,7 +9,7 @@ class player:
     address = ()
     # the socket of the player
     player_socket = None
-    # the string describing the current state of the player, looking like this :15-[100,200]-F\n
+    # the string describing the current state of the player, looking like this :15_[100,200]_F
     state = ""
 
     def __init__(self, player_socket, player_address):
