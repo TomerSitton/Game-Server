@@ -9,8 +9,8 @@ class player:
     address = ()
     # the socket of the player
     player_socket = None
-    # the player's location on the board. repressented by ['x','y']
-    location = [0 , 0]
+    # the string describing the current state of the player, looking like this :15_[100,200]_F
+    state = ""
 
     def __init__(self, player_socket, player_address):
         global number_of_players
@@ -28,4 +28,4 @@ class player:
         number_of_players += 1
 
     def __str__(self):
-        return "player number %d at address %r. Located at %r" % (self.index, self.address, self.location)
+        return "player number %d at address %r." % (self.index, self.address)

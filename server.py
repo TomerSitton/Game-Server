@@ -69,8 +69,7 @@ def update_player_location(player):
     while True:
         msg = str(player.player_socket.recv(32768))
         if msg != "":
-            player.location = msg.strip("[").strip("]\n").split(",")
-
+            player.state = msg.strip("\n") + " ~ "
 
 if __name__ == "__main__":
 
@@ -85,21 +84,19 @@ if __name__ == "__main__":
         player_requests_thread = Thread(name="player %d requests thread" % player.index, target=update_player_location,
                                         args=[player])
         player_requests_thread.start()
-
     # send data about the players in this format:
-    # "[newX1,newY1][newX2,newY2][newX3,newY3][newX4,newY4]\n"
-    c = 0
+    # "health_[newX1,newY1]_attack ~ health_[newX2,newY2]_attack ~ health_[newX3,newY3]_attack ~ health_[newX4,newY4]_attack ~ \n"
     msg = ""
     while True:
         for client in players:
             for p in players:
                 if msg == "":
-                    msg = str(p.location)
+                    msg = p.state
                 else:
-                    msg = str(msg + str(p.location))
+                    msg = msg + p.state
 
-            client.player_socket.send(msg + "\n")
-            print "sent %r"%(msg + "\n")
+            if msg is not "":
+                client.player_socket.send(msg + "\n")
+                print "sent %r"%(msg + "\n")
             msg = ""
-        c += 1
         _sleep(0.05)
