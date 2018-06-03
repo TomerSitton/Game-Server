@@ -13,6 +13,8 @@ CONNECTION_TIMEOUT = 15
 # The list of connected players
 players = []
 
+# the index of the winner
+winners_index = -1
 """
 This method creates the server socket and binds it to the correct address
 """
@@ -65,11 +67,19 @@ def _accept_clients(server_socket):
 
 
 def update_player_location(player):
+    global winners_index
     print "started handling requests for player: %r" % str(player)
-    while True:
-        msg = str(player.player_socket.recv(32768))
+    msg = str(player.player_socket.recv(32768))
+    while msg != "finished!":
         if msg != "":
             player.state = msg.strip("\n") + " ~ "
+        msg = str(player.player_socket.recv(32768))
+
+    msg = str(player.player_socket.recv(32768))
+    if msg != "" and int(msg.split()[1]) == player.index:
+        winners_index = player.index
+
+
 
 if __name__ == "__main__":
 
@@ -87,7 +97,7 @@ if __name__ == "__main__":
     # send data about the players in this format:
     # "health_[newX1,newY1]_attack ~ health_[newX2,newY2]_attack ~ health_[newX3,newY3]_attack ~ health_[newX4,newY4]_attack ~ \n"
     msg = ""
-    while True:
+    while winners_index == -1:
         for client in players:
             for p in players:
                 if msg == "":
@@ -100,3 +110,7 @@ if __name__ == "__main__":
                 print "sent %r"%(msg + "\n")
             msg = ""
         _sleep(0.05)
+
+    for client in players:
+        client.player_socket.send(str(winners_index)+"\n")
+    print "sent %r"%(str(winners_index)+"\n")
