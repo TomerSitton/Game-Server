@@ -95,7 +95,7 @@ if __name__ == "__main__":
                                         args=[player])
         player_requests_thread.start()
     # send data about the players in this format:
-    # "health_[newX1,newY1]_attack ~ health_[newX2,newY2]_attack ~ health_[newX3,newY3]_attack ~ health_[newX4,newY4]_attack ~ \n"
+    # "[newX1,newY1]_attack ~ [newX2,newY2] ~ health_[newX3,newY3]_attack ~ [newX4,newY4]_attack ~\n"
     msg = ""
     while winners_index == -1:
         for client in players:
