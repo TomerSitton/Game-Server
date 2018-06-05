@@ -7,9 +7,6 @@ IP = "0.0.0.0"
 PORT = 2212
 SERVER_ADDRESS = (IP, PORT)
 
-# The time to wait to playes to connect to the server
-CONNECTION_TIMEOUT = 15
-
 # The list of connected players
 players = []
 
@@ -34,36 +31,42 @@ This method handles the connection of the clients to the server
 """
 
 
-def handle_clients_connection(connection_timeout):
+def handle_clients_connection():
     global server_socket
     global players
     # setting client's queue length
     server_socket.listen(4)
-    print "waiting for players"
+    print "server online. waiting for players"
 
-    # run the accept_clients thread for the connection timeout
-    t = Thread(target=_accept_clients, args=[server_socket])
-    t.start()
-    t.join(timeout=connection_timeout)
+    while len(players) < 2:
+        _accept_client(server_socket)
 
-    print "time to connect is up! or there are already 4 players! we are full!"
+    print "there are 2 players. waiting for more...?"
 
-    # send the number of players to all the players
-    for player in players:
-        player.player_socket.send(str(len(players)) + "\n")
+    while len(players) < 4:
+        send_msg_to_players(players, "we are %d players. more players?" % len(players))
+        print "we are %d players. more players?" % len(players)
+        if "yes" in receive_msg_from_players():
+            _accept_client(server_socket)
+        else:
+            send_msg_to_players(players, "the final number of players is %d" % len(players))
+            print "the final number of players is %d" % len(players)
+            break
+
+    send_msg_to_players(players,"start game")
+    print "start game"
 
 
 """This method is responsible of connecting the players to the server and adding them to the list of connected players"""
 
 
-def _accept_clients(server_socket):
-    while len(players) < 4:
-        (player_socket, player_address) = server_socket.accept()
-        print "a player has joind the game!"
-        new_player = Player.player(player_socket=player_socket, player_address=player_address)
-        players.append(new_player)
-        # send the index of the player to that player
-        new_player.player_socket.send(str(new_player.index) + "\n")
+def _accept_client(server_socket):
+    (player_socket, player_address) = server_socket.accept()
+    print "a player has joind the game!"
+    new_player = Player.player(player_socket=player_socket, player_address=player_address)
+    players.append(new_player)
+    # send the index of the player to that player
+    new_player.player_socket.send(str(new_player.index) + "\n")
 
 
 def update_player_location(player):
@@ -80,6 +83,19 @@ def update_player_location(player):
         winners_index = player.index
 
 
+def send_msg_to_players(players, msg=""):
+    for player in players:
+        player.player_socket.send(msg + "\n")
+
+
+def receive_msg_from_players():
+    msg = []
+    for i, player in enumerate(players):
+        single_msg =  player.player_socket.recv(32768)
+        print "received %s" % single_msg
+        msg.append(single_msg)
+    return msg
+
 
 if __name__ == "__main__":
 
@@ -87,7 +103,7 @@ if __name__ == "__main__":
     init_server()
 
     # wait for players to connect and connect them to the game server
-    handle_clients_connection(connection_timeout=CONNECTION_TIMEOUT)
+    handle_clients_connection()
 
     # start a request-handling thread for each player
     for player in players:
@@ -107,10 +123,10 @@ if __name__ == "__main__":
 
             if msg is not "" and msg.count('[') == len(players):
                 client.player_socket.send(msg + "\n")
-                print "sent %r"%(msg + "\n")
+                print "sent %r" % (msg + "\n")
             msg = ""
         _sleep(0.05)
 
     for client in players:
-        client.player_socket.send(str(winners_index)+"\n")
-    print "sent %r"%(str(winners_index)+"\n")
+        client.player_socket.send(str(winners_index) + "\n")
+    print "sent %r" % (str(winners_index) + "\n")
