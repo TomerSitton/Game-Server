@@ -35,7 +35,7 @@ def handle_clients_connection():
     global server_socket
     global players
     # setting client's queue length
-    server_socket.listen(4)
+    server_socket.listen(5)
     print "server online. waiting for players"
 
     while len(players) < 2:
@@ -97,6 +97,16 @@ def receive_msg_from_players():
     return msg
 
 
+def handle_android_stuff():
+    global winners_index
+    (android_socket, android_address) = server_socket.accept()
+    while winners_index == -1:
+        print "andro-thread"
+        _sleep(0.1)
+        pass
+    android_socket.send(str(winners_index) + "\n")
+
+
 if __name__ == "__main__":
 
     # initialize the server socket
@@ -104,6 +114,9 @@ if __name__ == "__main__":
 
     # wait for players to connect and connect them to the game server
     handle_clients_connection()
+
+    # handle android stuff
+    Thread(name="android thread", target= handle_android_stuff).start()
 
     # start a request-handling thread for each player
     for player in players:
