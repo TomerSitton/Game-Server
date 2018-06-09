@@ -2,6 +2,10 @@ import socket
 from threading import Thread, _sleep
 import Player
 
+android_socket = None
+
+server_socket = None
+
 # The server address data
 IP = "0.0.0.0"
 PORT = 2212
@@ -12,6 +16,7 @@ players = []
 
 # the index of the winner
 winners_index = -1
+
 """
 This method creates the server socket and binds it to the correct address
 """
@@ -35,7 +40,7 @@ def handle_clients_connection():
     global server_socket
     global players
     # setting client's queue length
-    server_socket.listen(4)
+    server_socket.listen(5)
     print "server online. waiting for players"
 
     while len(players) < 2:
@@ -96,24 +101,32 @@ def receive_msg_from_players():
         msg.append(single_msg)
     return msg
 
+def android():
+    global android_socket
+    (android_socket, android_address) = server_socket.accept()
+
 
 if __name__ == "__main__":
-
     # initialize the server socket
     init_server()
 
     # wait for players to connect and connect them to the game server
     handle_clients_connection()
 
+    # handle android stuff
+    Thread(name="android", target=android).start()
+
     # start a request-handling thread for each player
     for player in players:
         player_requests_thread = Thread(name="player %d requests thread" % player.index, target=update_player_location,
                                         args=[player])
         player_requests_thread.start()
+
+    msg = ""
     # send data about the players in this format:
     # "[newX1,newY1]_attack ~ [newX2,newY2] ~ health_[newX3,newY3]_attack ~ [newX4,newY4]_attack ~\n"
-    msg = ""
     while winners_index == -1:
+        healths = ""
         for client in players:
             for p in players:
                 if msg == "":
@@ -121,12 +134,21 @@ if __name__ == "__main__":
                 else:
                     msg = msg + p.state
 
+            if client.state != "":
+                healths = healths + "player " + str(client.index) + " : " + client.state[-4]+ " \t"
+
             if msg is not "" and msg.count('[') == len(players):
                 client.player_socket.send(msg + "\n")
-                print "sent %r" % (msg + "\n")
+                # print "sent %r" % (msg + "\n")
             msg = ""
+
+        print healths + "\n"
+        if android_socket != None:
+            android_socket.send(healths + "\n")
         _sleep(0.05)
 
     for client in players:
         client.player_socket.send(str(winners_index) + "\n")
+    android_socket.send(str(winners_index) + "\n")
     print "sent %r" % (str(winners_index) + "\n")
+    server_socket.close()
