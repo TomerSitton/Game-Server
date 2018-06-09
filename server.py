@@ -3,26 +3,26 @@ from threading import Thread, _sleep
 import Player
 
 android_socket = None
-
+"""The android socket"""
 server_socket = None
-
+"""The server socket"""
 # The server address data
 IP = "0.0.0.0"
+"""The server's IP address"""
 PORT = 2212
+"""The port on which the program runs on"""
 SERVER_ADDRESS = (IP, PORT)
+"""The full address of the program"""
 
-# The list of connected players
 players = []
+"""The list of connected players"""
 
-# the index of the winner
 winners_index = -1
-
-"""
-This method creates the server socket and binds it to the correct address
-"""
-
+"""The index of the winner"""
 
 def init_server():
+    """ This method creates the server socket and binds it to the correct address """
+
     global server_socket
     # creating a server socket
     server_socket = socket.socket()
@@ -31,12 +31,9 @@ def init_server():
     server_socket.bind(SERVER_ADDRESS)
 
 
-"""
-This method handles the connection of the clients to the server
-"""
-
 
 def handle_clients_connection():
+    """ This method handles the connection of the clients to the server """
     global server_socket
     global players
     # setting client's queue length
@@ -62,10 +59,13 @@ def handle_clients_connection():
     print "start game"
 
 
-"""This method is responsible of connecting the players to the server and adding them to the list of connected players"""
-
-
 def _accept_client(server_socket):
+    """
+    This method is responsible of connecting a player to the
+    server and adding him to the list of connected players
+    :param server_socket: the socket of the server
+    :return: None
+    """
     (player_socket, player_address) = server_socket.accept()
     print "a player has joind the game!"
     new_player = Player.player(player_socket=player_socket, player_address=player_address)
@@ -75,6 +75,11 @@ def _accept_client(server_socket):
 
 
 def update_player_location(player):
+    """
+    This method receives data from a player and updates its "state" field
+    :param player: the player of which the method needs to update the location
+    :return: None
+    """
     global winners_index
     print "started handling requests for player: %r" % str(player)
     msg = str(player.player_socket.recv(32768))
@@ -89,11 +94,21 @@ def update_player_location(player):
 
 
 def send_msg_to_players(players, msg=""):
+    """
+    sends the data msg received as a parameter to all the players
+    :param players: the list of players
+    :param msg: the msg to send to players
+    :return: None
+    """
     for player in players:
         player.player_socket.send(msg + "\n")
 
 
 def receive_msg_from_players():
+    """
+    creates a long msg from the data received from all the player
+    :return: a string representing the data sent from all of the players
+    """
     msg = []
     for i, player in enumerate(players):
         single_msg =  player.player_socket.recv(32768)
@@ -102,11 +117,16 @@ def receive_msg_from_players():
     return msg
 
 def android():
+    """
+    handle android connection
+    :return: None
+    """
     global android_socket
     (android_socket, android_address) = server_socket.accept()
 
 
 if __name__ == "__main__":
+
     # initialize the server socket
     init_server()
 
@@ -124,7 +144,7 @@ if __name__ == "__main__":
 
     msg = ""
     # send data about the players in this format:
-    # "[newX1,newY1]_attack ~ [newX2,newY2] ~ health_[newX3,newY3]_attack ~ [newX4,newY4]_attack ~\n"
+    # "[newX1,newY1]_attack#health ~ [newX2,newY2]_attack#health ~ [newX3,newY3]_attack#health ~ [newX4,newY4]_attack#health ~\n"
     while winners_index == -1:
         healths = ""
         for client in players:
@@ -139,7 +159,7 @@ if __name__ == "__main__":
 
             if msg is not "" and msg.count('[') == len(players):
                 client.player_socket.send(msg + "\n")
-                # print "sent %r" % (msg + "\n")
+                print "sent %r" % (msg + "\n")
             msg = ""
 
         print healths + "\n"
