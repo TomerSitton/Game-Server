@@ -1,0 +1,57 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module server</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>server</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/tomer/PycharmProjects/Game-Server/server.py">/home/tomer/PycharmProjects/Game-Server/server.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="Player.html">Player</a><br>
+</td><td width="25%" valign=top><a href="socket.html">socket</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-android"><strong>android</strong></a>()</dt><dd><tt>handle&nbsp;android&nbsp;connection<br>
+:return:&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-handle_clients_connection"><strong>handle_clients_connection</strong></a>()</dt><dd><tt>This&nbsp;method&nbsp;handles&nbsp;the&nbsp;connection&nbsp;of&nbsp;the&nbsp;clients&nbsp;to&nbsp;the&nbsp;server</tt></dd></dl>
+ <dl><dt><a name="-init_server"><strong>init_server</strong></a>()</dt><dd><tt>This&nbsp;method&nbsp;creates&nbsp;the&nbsp;server&nbsp;socket&nbsp;and&nbsp;binds&nbsp;it&nbsp;to&nbsp;the&nbsp;correct&nbsp;address</tt></dd></dl>
+ <dl><dt><a name="-receive_msg_from_players"><strong>receive_msg_from_players</strong></a>()</dt><dd><tt>creates&nbsp;a&nbsp;long&nbsp;msg&nbsp;from&nbsp;the&nbsp;data&nbsp;received&nbsp;from&nbsp;all&nbsp;the&nbsp;player<br>
+:return:&nbsp;a&nbsp;string&nbsp;representing&nbsp;the&nbsp;data&nbsp;sent&nbsp;from&nbsp;all&nbsp;of&nbsp;the&nbsp;players</tt></dd></dl>
+ <dl><dt><a name="-send_msg_to_players"><strong>send_msg_to_players</strong></a>(players, msg<font color="#909090">=''</font>)</dt><dd><tt>sends&nbsp;the&nbsp;data&nbsp;msg&nbsp;received&nbsp;as&nbsp;a&nbsp;parameter&nbsp;to&nbsp;all&nbsp;the&nbsp;players<br>
+:param&nbsp;players:&nbsp;the&nbsp;list&nbsp;of&nbsp;players<br>
+:param&nbsp;msg:&nbsp;the&nbsp;msg&nbsp;to&nbsp;send&nbsp;to&nbsp;players<br>
+:return:&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-update_player_location"><strong>update_player_location</strong></a>(player)</dt><dd><tt>This&nbsp;method&nbsp;receives&nbsp;data&nbsp;from&nbsp;a&nbsp;player&nbsp;and&nbsp;updates&nbsp;its&nbsp;"state"&nbsp;field<br>
+:param&nbsp;player:&nbsp;the&nbsp;player&nbsp;of&nbsp;which&nbsp;the&nbsp;method&nbsp;needs&nbsp;to&nbsp;update&nbsp;the&nbsp;location<br>
+:return:&nbsp;None</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>IP</strong> = '0.0.0.0'<br>
+<strong>PORT</strong> = 2212<br>
+<strong>SERVER_ADDRESS</strong> = ('0.0.0.0', 2212)<br>
+<strong>android_socket</strong> = None<br>
+<strong>players</strong> = []<br>
+<strong>server_socket</strong> = None<br>
+<strong>winners_index</strong> = -1</td></tr></table>
+</body></html>
